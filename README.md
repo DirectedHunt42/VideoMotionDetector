@@ -1,14 +1,7 @@
 <div align="center">
-  <img src="pixel_motion_detector/icon.png" alt="Pixel Motion Detector icon" width="112" height="112">
+  <img src="pixel_motion_detector/logo.png" alt="Pixel Motion Detector — Camera Motion for Home Assistant" width="720">
 
-  # Pixel Motion Detector
-
-  **Lightweight camera motion sensors for Home Assistant**
-
-  Turn pixel changes in your camera snapshots into MQTT sensors your
-  automations can use.
-
-  ![Version 0.1.1](https://img.shields.io/badge/version-0.1.1-3572A5)
+  ![Version 0.1.2](https://img.shields.io/badge/version-0.1.2-3572A5)
   ![Home Assistant add-on](https://img.shields.io/badge/Home%20Assistant-add--on-18BCF2)
   ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 </div>
