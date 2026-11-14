@@ -24,7 +24,7 @@ MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_PIXELS = 40_000_000
 DISCOVERY_PREFIX = "homeassistant"
 TOPIC_PREFIX = "pixel_motion"
-APP_VERSION = "0.1.3"
+APP_VERSION = "0.1.4"
 
 
 @dataclass(frozen=True)

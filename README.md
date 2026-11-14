@@ -1,7 +1,7 @@
 <div align="center">
   <img src="pixel_motion_detector/logo.png" alt="Pixel Motion Detector — Camera Motion for Home Assistant" width="720">
 
-  ![Version 0.1.3](https://img.shields.io/badge/version-0.1.3-3572A5)
+  ![Version 0.1.4](https://img.shields.io/badge/version-0.1.4-3572A5)
   ![Home Assistant add-on](https://img.shields.io/badge/Home%20Assistant-add--on-18BCF2)
   ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 </div>
@@ -63,7 +63,7 @@ Set these options in the add-on's **Configuration** tab:
 | `sensitivity` | `60` | Range 1–100. Higher values react to smaller changed areas. |
 | `pixel_delta` | `25` | Brightness difference (0–255) for an individual pixel to count as changed. |
 | `poll_interval` | `1.0` | Seconds between snapshot polling cycles. |
-| `motion_off_delay` | `5` | Quiet seconds before a motion sensor turns off. |
+| `motion_off_delay` | `5` | Quiet seconds before a motion sensor turns off. `0` clears it on the first poll with no motion. |
 
 Example:
 

@@ -1,5 +1,5 @@
 name: "Pixel Motion Detector"
-version: "0.1.3"
+version: "0.1.4"
 slug: "pixel_motion_detector"
 description: "Lightweight pixel-change motion detection for Home Assistant cameras."
 url: "https://github.com/DirectedHunt42/VideoMotionDetector"
@@ -34,4 +34,4 @@ schema:
   sensitivity: int(1,100)
   pixel_delta: int(1,255)
   poll_interval: float(0.2,10)
-  motion_off_delay: int(1,300)
+  motion_off_delay: int(0,300)

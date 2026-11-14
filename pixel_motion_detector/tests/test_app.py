@@ -45,6 +45,16 @@ class MotionTrackerTests(unittest.TestCase):
         state, _ = tracker.update(frame(255), now=3)
         self.assertFalse(state)
 
+    def test_zero_off_delay_clears_on_first_quiet_poll(self) -> None:
+        tracker = MotionTracker(sensitivity=60, pixel_delta=25, off_delay=0)
+        tracker.update(frame(0), now=0)
+        tracker.update(frame(255), now=1)
+
+        state, rising_edge = tracker.update(frame(255), now=1.1)
+
+        self.assertFalse(state)
+        self.assertFalse(rising_edge)
+
     def test_sensitivity_controls_required_changed_area(self) -> None:
         low = MotionTracker(sensitivity=1, pixel_delta=25, off_delay=2)
         high = MotionTracker(sensitivity=100, pixel_delta=25, off_delay=2)
