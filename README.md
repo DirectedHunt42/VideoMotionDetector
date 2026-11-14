@@ -1,7 +1,7 @@
 <div align="center">
   <img src="pixel_motion_detector/logo.png" alt="Pixel Motion Detector — Camera Motion for Home Assistant" width="720">
 
-  ![Version 0.1.4](https://img.shields.io/badge/version-0.1.4-3572A5)
+  ![Version 0.1.5](https://img.shields.io/badge/version-0.1.5-3572A5)
   ![Home Assistant add-on](https://img.shields.io/badge/Home%20Assistant-add--on-18BCF2)
   ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 </div>
@@ -64,6 +64,7 @@ Set these options in the add-on's **Configuration** tab:
 | `pixel_delta` | `25` | Brightness difference (0–255) for an individual pixel to count as changed. |
 | `poll_interval` | `1.0` | Seconds between snapshot polling cycles. |
 | `motion_off_delay` | `5` | Quiet seconds before a motion sensor turns off. `0` clears it on the first poll with no motion. |
+| `count_continuous_motion` | `false` | Count each poll that detects motion as a new event, even while the motion sensor is already on. |
 
 Example:
 
@@ -83,12 +84,18 @@ sensitivity: 60
 pixel_delta: 25
 poll_interval: 1.0
 motion_off_delay: 5
+count_continuous_motion: false
 ```
 
 Create a long-lived access token from your Home Assistant user profile. Treat
 the token and MQTT password as secrets: do not share or commit them. Configure
 the broker to allow the add-on to publish its MQTT topics. The built-in
 Mosquitto add-on is a common broker choice.
+
+Enable `count_continuous_motion` in the add-on configuration to increment the
+event counter on every poll that detects motion. The motion binary sensor remains
+on until its quiet delay expires; repeated detections are reported through the
+counter rather than additional off/on transitions.
 
 ### Tuning sensitivity
 

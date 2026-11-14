@@ -15,25 +15,42 @@ class MotionTrackerTests(unittest.TestCase):
     def test_initial_frame_does_not_trigger_motion(self) -> None:
         tracker = MotionTracker(sensitivity=60, pixel_delta=25, off_delay=2)
 
-        state, rising_edge = tracker.update(frame(0), now=0)
+        state, new_detection = tracker.update(frame(0), now=0)
 
         self.assertFalse(state)
-        self.assertFalse(rising_edge)
+        self.assertFalse(new_detection)
         self.assertEqual(tracker.detection_count, 0)
 
-    def test_detects_large_change_and_counts_only_motion_rising_edges(self) -> None:
+    def test_detects_large_change_and_counts_only_motion_rising_edges_by_default(
+        self,
+    ) -> None:
         tracker = MotionTracker(sensitivity=60, pixel_delta=25, off_delay=2)
         tracker.update(frame(0), now=0)
 
-        state, rising_edge = tracker.update(frame(255), now=1)
+        state, new_detection = tracker.update(frame(255), now=1)
         self.assertTrue(state)
-        self.assertTrue(rising_edge)
+        self.assertTrue(new_detection)
         self.assertEqual(tracker.detection_count, 1)
 
-        state, rising_edge = tracker.update(frame(0), now=2)
+        state, new_detection = tracker.update(frame(0), now=2)
         self.assertTrue(state)
-        self.assertFalse(rising_edge)
+        self.assertFalse(new_detection)
         self.assertEqual(tracker.detection_count, 1)
+
+    def test_counts_each_detection_during_continuous_motion_when_enabled(self) -> None:
+        tracker = MotionTracker(
+            sensitivity=60,
+            pixel_delta=25,
+            off_delay=2,
+            count_continuous_motion=True,
+        )
+        tracker.update(frame(0), now=0)
+
+        for now, color in ((1, 255), (2, 0), (3, 255)):
+            state, new_detection = tracker.update(frame(color), now=now)
+            self.assertTrue(state)
+            self.assertTrue(new_detection)
+            self.assertEqual(tracker.detection_count, now)
 
     def test_motion_clears_after_off_delay(self) -> None:
         tracker = MotionTracker(sensitivity=60, pixel_delta=25, off_delay=2)

@@ -24,7 +24,7 @@ MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_PIXELS = 40_000_000
 DISCOVERY_PREFIX = "homeassistant"
 TOPIC_PREFIX = "pixel_motion"
-APP_VERSION = "0.1.4"
+APP_VERSION = "0.1.5"
 
 
 @dataclass(frozen=True)
@@ -35,10 +35,17 @@ class Camera:
 
 
 class MotionTracker:
-    def __init__(self, sensitivity: int, pixel_delta: int, off_delay: int) -> None:
+    def __init__(
+        self,
+        sensitivity: int,
+        pixel_delta: int,
+        off_delay: int,
+        count_continuous_motion: bool = False,
+    ) -> None:
         self.sensitivity = sensitivity
         self.pixel_delta = pixel_delta
         self.off_delay = off_delay
+        self.count_continuous_motion = count_continuous_motion
         self.previous: Image.Image | None = None
         self.is_motion = False
         self.last_motion_at: float | None = None
@@ -59,10 +66,12 @@ class MotionTracker:
         required_percent = 5.0 - (self.sensitivity - 1) * (4.9 / 99)
         detected = changed_percent >= required_percent
 
-        rising_edge = detected and not self.is_motion
+        new_detection = detected and (
+            not self.is_motion or self.count_continuous_motion
+        )
         if detected:
             self.last_motion_at = now
-            if rising_edge:
+            if new_detection:
                 self.detection_count += 1
             self.is_motion = True
         elif (
@@ -72,7 +81,7 @@ class MotionTracker:
         ):
             self.is_motion = False
 
-        return self.is_motion, rising_edge
+        return self.is_motion, new_detection
 
 
 def load_options() -> dict[str, Any]:
@@ -214,6 +223,7 @@ async def run_monitor(options: dict[str, Any]) -> None:
             int(options["sensitivity"]),
             int(options["pixel_delta"]),
             int(options["motion_off_delay"]),
+            bool(options.get("count_continuous_motion", False)),
         )
         for camera in cameras
     }
@@ -269,10 +279,10 @@ async def run_monitor(options: dict[str, Any]) -> None:
                             if frame is None:
                                 continue
                             tracker = trackers[camera.entity_id]
-                            state, rising_edge = tracker.update(
+                            state, new_detection = tracker.update(
                                 frame, time.monotonic()
                             )
-                            if rising_edge:
+                            if new_detection:
                                 LOGGER.info("Motion detected: %s", camera.entity_id)
                                 await client.publish(
                                     f"{TOPIC_PREFIX}/{camera.object_id}/count",
