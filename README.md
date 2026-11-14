@@ -1,7 +1,7 @@
 <div align="center">
   <img src="pixel_motion_detector/logo.png" alt="Pixel Motion Detector — Camera Motion for Home Assistant" width="720">
 
-  ![Version 0.1.2](https://img.shields.io/badge/version-0.1.2-3572A5)
+  ![Version 0.1.3](https://img.shields.io/badge/version-0.1.3-3572A5)
   ![Home Assistant add-on](https://img.shields.io/badge/Home%20Assistant-add--on-18BCF2)
   ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 </div>

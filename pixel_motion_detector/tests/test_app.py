@@ -1,8 +1,10 @@
+import asyncio
 import unittest
+from unittest.mock import patch
 
 from PIL import Image
 
-from app import Camera, MotionTracker, discovery_documents
+from app import Camera, MotionTracker, discovery_documents, read_image_body
 
 
 def frame(color: int) -> Image.Image:
@@ -67,6 +69,26 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(motion["state_topic"], "pixel_motion/front_door/state")
         self.assertEqual(count["state_topic"], "pixel_motion/front_door/count")
         self.assertEqual(count["state_class"], "total_increasing")
+
+
+class SnapshotBodyTests(unittest.TestCase):
+    def test_reads_all_response_chunks(self) -> None:
+        async def chunks():
+            yield b"\xff\xd8frame "
+            yield b"data\xff\xd9"
+
+        data = asyncio.run(read_image_body(chunks(), "camera.test"))
+
+        self.assertEqual(data, b"\xff\xd8frame data\xff\xd9")
+
+    def test_rejects_body_larger_than_limit(self) -> None:
+        async def chunks():
+            yield b"1234"
+            yield b"56"
+
+        with patch("app.MAX_IMAGE_BYTES", 5):
+            with self.assertRaisesRegex(ValueError, "image-size limit"):
+                asyncio.run(read_image_body(chunks(), "camera.test"))
 
 
 if __name__ == "__main__":

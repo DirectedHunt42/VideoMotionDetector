@@ -7,6 +7,7 @@ import json
 import logging
 import re
 import time
+from collections.abc import AsyncIterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -23,7 +24,7 @@ MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_PIXELS = 40_000_000
 DISCOVERY_PREFIX = "homeassistant"
 TOPIC_PREFIX = "pixel_motion"
-APP_VERSION = "0.1.2"
+APP_VERSION = "0.1.3"
 
 
 @dataclass(frozen=True)
@@ -126,10 +127,19 @@ async def fetch_snapshot(
         response.raise_for_status()
         if response.content_length is not None and response.content_length > MAX_IMAGE_BYTES:
             raise ValueError(f"Snapshot for {entity_id} exceeds the image-size limit")
-        data = await response.content.read(MAX_IMAGE_BYTES + 1)
-        if len(data) > MAX_IMAGE_BYTES:
-            raise ValueError(f"Snapshot for {entity_id} exceeds the image-size limit")
+        data = await read_image_body(
+            response.content.iter_chunked(64 * 1024), entity_id
+        )
     return decode_frame(data, entity_id)
+
+
+async def read_image_body(chunks: AsyncIterable[bytes], entity_id: str) -> bytes:
+    data = bytearray()
+    async for chunk in chunks:
+        if len(data) + len(chunk) > MAX_IMAGE_BYTES:
+            raise ValueError(f"Snapshot for {entity_id} exceeds the image-size limit")
+        data.extend(chunk)
+    return bytes(data)
 
 
 async def poll_camera(
