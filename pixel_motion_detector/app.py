@@ -23,6 +23,7 @@ MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_PIXELS = 40_000_000
 DISCOVERY_PREFIX = "homeassistant"
 TOPIC_PREFIX = "pixel_motion"
+APP_VERSION = "0.1.1"
 
 
 @dataclass(frozen=True)
@@ -151,14 +152,14 @@ def discovery_documents(camera: Camera) -> tuple[dict[str, Any], dict[str, Any]]
         "name": "Pixel Motion Detector",
         "manufacturer": "VideoMotionDetector",
         "model": "Pixel Motion Detector",
-        "sw_version": "0.1.0",
+        "sw_version": APP_VERSION,
     }
     common = {
         "availability_topic": f"{TOPIC_PREFIX}/availability",
         "device": device,
         "origin": {
             "name": "Pixel Motion Detector",
-            "sw": "0.1.0",
+            "sw": APP_VERSION,
             "url": "https://github.com/DirectedHunt42/VideoMotionDetector",
         },
     }

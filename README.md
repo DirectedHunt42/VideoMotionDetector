@@ -8,7 +8,7 @@
   Turn pixel changes in your camera snapshots into MQTT sensors your
   automations can use.
 
-  ![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-3572A5)
+  ![Version 0.1.1](https://img.shields.io/badge/version-0.1.1-3572A5)
   ![Home Assistant add-on](https://img.shields.io/badge/Home%20Assistant-add--on-18BCF2)
   ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 </div>
