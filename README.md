@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icon.png" alt="Pixel Motion Detector icon" width="112" height="112">
+  <img src="pixel_motion_detector/icon.png" alt="Pixel Motion Detector icon" width="112" height="112">
 
   # Pixel Motion Detector
 
@@ -51,7 +51,7 @@ it is not currently listed in the official add-on store.
 
 1. In Home Assistant, open **Settings → Add-ons → Add-on Store**.
 2. Open the upper-right menu and choose **Repositories**.
-3. Add this repository's Git URL.
+3. Add `https://github.com/DirectedHunt42/VideoMotionDetector`.
 4. Find and install **Pixel Motion Detector**, configure it, then start it.
 
 ## Configure
@@ -131,6 +131,7 @@ the add-on is connected.
 Run the unit tests with Python 3.11 or newer:
 
 ```sh
+cd pixel_motion_detector
 python -m unittest discover -s tests -v
 ```
 
